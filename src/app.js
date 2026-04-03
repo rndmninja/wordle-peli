@@ -2,6 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const app = express();
+const routes = require('./routes');
+
+// Antaa Expressille mahdollisuuden lukea JSON-dataa POST-pyyntöjen bodyssa.
+app.use(express.json());
 
 // Lukee words.txt-tiedoston
 const wordsPath = path.join(__dirname, 'words.txt');
@@ -26,6 +30,9 @@ app.get('/random-word', (req, res) => {
 	const randomWord = words[Math.floor(Math.random() * words.length)];
 	res.json({ word: randomWord });
 });
+
+// Liitetään erikseen tehdyt resurssireitit tähän sovellukseen.
+app.use(routes);
 
 const PORT = process.env.PORT || 3000;
 
