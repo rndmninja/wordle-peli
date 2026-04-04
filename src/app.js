@@ -2,6 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const app = express();
+
+// Asettaa EJS-templatenginen ja määrittää views-kansion sijainnin.
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '../views'));
 const routes = require('./routes');
 
 // Antaa Expressille mahdollisuuden lukea JSON-dataa POST-pyyntöjen bodyssa.
