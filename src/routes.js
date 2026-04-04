@@ -9,6 +9,25 @@ const users = [];
 const games = [];
 const guesses = [];
 
+// Luetaan words.txt kerran ja valitaan yksi sana muistiin.
+const wordsPath = path.join(__dirname, 'words.txt');
+let words = [];
+let randomWordInMemory = null;
+
+try {
+	const data = fs.readFileSync(wordsPath, 'utf8');
+	words = data
+		.split('\n')
+		.map(w => w.trim().toLowerCase())
+		.filter(w => w.length === 5);
+
+	if (words.length > 0) {
+		randomWordInMemory = words[Math.floor(Math.random() * words.length)];
+	}
+} catch (err) {
+	console.error('Error reading words.txt:', err);
+}
+
 // Yksinkertaiset laskurit, jotta jokainen uusi tieto saa oman id:n.
 let userId = 1;
 let gameId = 1;
@@ -66,33 +85,11 @@ router.post('/guesses', (req, res) => {
 
 // Renderöi pelisivun, jossa satunnainen sana on valmiina.
 router.get('/game', (req, res) => {
-
-	// Lukee words.txt-tiedoston ja suodattaa vain 5-kirjaimiset sanat
-	// Kuten random-word endpoinitssa
-
-	/*
-		TODO: Pitäis tehä niin että words.txt luetaan vain kerran ja tallennetaan muistiin
-		eikä joka ikiselle pelisivun lataukselle, 
-		ja sitten voisi laittaa napin jossa voisi hakea uuden satunnaisen sanan ilman
-		että koko sivu latautuu uudestaan
-	*/
-	
-	const wordsPath = path.join(__dirname, 'words.txt');
-	let words = [];
-	try {
-		const data = fs.readFileSync(wordsPath, 'utf8');
-		words = data
-			.split('\n')
-			.map(w => w.trim().toLowerCase())
-			.filter(w => w.length === 5);
-	} catch (err) {
-		return res.status(500).send('Error reading words.txt');
-	}
-	if (words.length === 0) {
+	if (!randomWordInMemory) {
 		return res.status(500).send('No words available');
 	}
-	const randomWord = words[Math.floor(Math.random() * words.length)];
-	res.render('game', { randomWord });
+
+	res.render('game', { randomWord: randomWordInMemory });
 });
 
 module.exports = router;
