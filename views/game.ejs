@@ -1,12 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Wordle Peli</title>
+	<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-	<h1>Wordle Peli</h1>
-	<p>Satunnainen sana (testaus): <%= randomWord %></p>
+	<main class="game-shell">
+		<header class="game-header">
+			<h1>Wordle Peli</h1>
+		</header>
+
+		<section class="status-card" aria-live="polite">
+			<p class="message"><%= gameState.message %></p>
+		</section>
+
+		<section class="board" aria-label="Arvausruudukko">
+			<% boardRows.forEach(function(row) { %>
+				<div class="board-row">
+					<% row.forEach(function(tile) { %>
+						<span class="tile tile--<%= tile.status %>"><%= tile.letter %></span>
+					<% }); %>
+				</div>
+			<% }); %>
+		</section>
+
+		<form class="guess-form" action="/game/guess" method="post">
+			<label for="guess">Uusi arvaus</label>
+			<div class="guess-controls">
+				<input
+					id="guess"
+					name="guess"
+					type="text"
+					maxlength="<%= wordLength %>"
+					pattern="[a-zA-ZåäöÅÄÖ]{<%= wordLength %>}"
+					autocomplete="off"
+					autocapitalize="none"
+					required
+				>
+				<button type="submit">Arvaa</button>
+			</div>
+		</form>
+	</main>
 </body>
 </html>

@@ -10,6 +10,14 @@ const routes = require('./routes');
 
 // Antaa Expressille mahdollisuuden lukea JSON-dataa POST-pyyntöjen bodyssa.
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Tarjoaa pelin CSS-tiedoston selaimelle.
+app.use('/css', express.static(path.join(__dirname, '../views/css')));
+
+// TODO / suositus:
+// Kun pelirakenne vakioituu, siirra words.txt:n luku ja /random-word-reitti kokonaan routes.js-tiedostoon.
+// Silloin sanalista luetaan vain yhdessa paikassa ja app.js pysyy pelkkana sovelluksen alustuksena.
 
 // Lukee words.txt-tiedoston
 const wordsPath = path.join(__dirname, 'words.txt');
