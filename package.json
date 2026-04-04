@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/rndmninja/wordle-peli#readme",
   "dependencies": {
+    "ejs": "^5.0.1",
     "express": "^5.2.1",
     "node": "^25.9.0"
   }
