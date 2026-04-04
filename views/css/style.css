@@ -22,6 +22,31 @@ body {
 	line-height: 1.1;
 }
 
+.game-actions {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.secondary-button {
+	padding: 10px 14px;
+	border: 1px solid #cfc6b7;
+	border-radius: 10px;
+	background: #fff;
+	color: #1f2933;
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.secondary-button:hover {
+	background: #f3ede3;
+}
+
+.secondary-button:disabled {
+	opacity: 0.7;
+	cursor: default;
+}
+
 .status-card {
 	margin-bottom: 20px;
 	padding: 16px 18px;
@@ -127,6 +152,10 @@ body {
 @media (max-width: 520px) {
 	.game-shell {
 		padding: 28px 16px 40px;
+	}
+
+	.game-actions {
+		margin-top: 6px;
 	}
 
 	.board-row {

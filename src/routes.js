@@ -117,6 +117,15 @@ function renderGame(res, statusCode = 200) {
 	});
 }
 
+function chooseRandomWord() {
+	if (words.length === 0) {
+		return null;
+	}
+
+	const randomIndex = Math.floor(Math.random() * words.length);
+	return words[randomIndex];
+}
+
 // Yksinkertaiset laskurit, jotta jokainen uusi tieto saa oman id:n.
 let userId = 1;
 let gameId = 1;
@@ -177,6 +186,17 @@ router.get('/game', (req, res) => {
 	return renderGame(res);
 });
 
+// Palauttaa satunnaisen sanan sanalistasta.
+router.get('/random-word', (req, res) => {
+	const randomWord = chooseRandomWord();
+
+	if (!randomWord) {
+		return res.status(500).json({ error: 'No words available' });
+	}
+
+	return res.json({ word: randomWord });
+});
+
 // Vastaanottaa uuden arvauksen ja päivittää pelitilan.
 router.post('/game/guess', (req, res) => {
 	const gameState = ensureGameState();
@@ -221,6 +241,24 @@ router.post('/game/guess', (req, res) => {
 
 	return renderGame(res);
 
+});
+
+// Arpoo uuden sanan ilman sivun uudelleenlatausta.
+router.post('/game/new-word', (req, res) => {
+	const nextWord = chooseRandomWord();
+
+	if (!nextWord) {
+		return res.status(500).json({ message: 'No words available' });
+	}
+
+	randomWordInMemory = nextWord;
+	currentGame = createGameState();
+	currentGame.message = 'Uusi sana arvottu. Aloita arvaus.';
+
+	return res.json({
+		boardRows: buildBoardRows(currentGame),
+		message: currentGame.message
+	});
 });
 
 module.exports = router;

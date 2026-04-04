@@ -1,4 +1,3 @@
-const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const app = express();
@@ -14,34 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // Tarjoaa pelin CSS-tiedoston selaimelle.
 app.use('/css', express.static(path.join(__dirname, '../views/css')));
-
-// TODO / suositus:
-// Kun pelirakenne vakioituu, siirra words.txt:n luku ja /random-word-reitti kokonaan routes.js-tiedostoon.
-// Silloin sanalista luetaan vain yhdessa paikassa ja app.js pysyy pelkkana sovelluksen alustuksena.
-
-// Lukee words.txt-tiedoston
-const wordsPath = path.join(__dirname, 'words.txt');
-let words = [];
-
-// Käyttää rivinvaihtoja erottelemaan sanat ja suodattaa vain 5-kirjaimiset sanat
-try {
-	const data = fs.readFileSync(wordsPath, 'utf8');
-	words = data
-		.split('\n')
-		.map(w => w.trim().toLowerCase())
-		.filter(w => w.length === 5);
-} catch (err) {
-	console.error('Error reading words.txt:', err);
-}
-
-// API-endpoint satunnaisen sanan hakemiseksi
-app.get('/random-word', (req, res) => {
-	if (words.length === 0) {
-		return res.status(500).json({ error: 'No words available' });
-	}
-	const randomWord = words[Math.floor(Math.random() * words.length)];
-	res.json({ word: randomWord });
-});
 
 // Liitetään erikseen tehdyt resurssireitit tähän sovellukseen.
 app.use(routes);
