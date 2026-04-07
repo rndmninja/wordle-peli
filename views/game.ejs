@@ -18,17 +18,6 @@
 		<section class="status-card" aria-live="polite">
 			<p id="status-message" class="message"><%= gameState.message %></p>
 		</section>
-
-		<section id="board" class="board" aria-label="Arvausruudukko">
-			<% boardRows.forEach(function(row) { %>
-				<div class="board-row">
-					<% row.forEach(function(tile) { %>
-						<span class="tile tile--<%= tile.status %>"><%= tile.letter %></span>
-					<% }); %>
-				</div>
-			<% }); %>
-		</section>
-
 		<form class="guess-form" action="/game/guess" method="post">
 			<label for="guess">Uusi arvaus</label>
 			<div class="guess-controls">
@@ -45,6 +34,16 @@
 				<button type="submit">Arvaa</button>
 			</div>
 		</form>
+		<section id="board" class="board" aria-label="Arvausruudukko">
+			<% boardRows.forEach(function(row) { %>
+				<div class="board-row">
+					<% row.forEach(function(tile) { %>
+						<span class="tile tile--<%= tile.status %>"><%= tile.letter %></span>
+					<% }); %>
+				</div>
+			<% }); %>
+		</section>
+
 	</main>
 
 	<script>

@@ -111,11 +111,12 @@ body {
 
 .guess-form {
 	display: grid;
-	gap: 10px;
+	margin-bottom: 10px;
 }
 
 .guess-form label {
 	font-weight: 700;
+	margin-bottom: 2px;
 }
 
 .guess-controls {
