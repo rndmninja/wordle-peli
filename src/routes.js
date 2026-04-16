@@ -8,7 +8,7 @@ const { status } = require('express/lib/response');
 // Muistiin tallennetut taulukot kolmelle perusresurssille.
 // Nämä ovat väliaikaisia ja korvataan myöhemmin oikealla tietokannalla.
 
-const guesses = [];
+
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
@@ -130,7 +130,6 @@ function chooseRandomWord() {
 // Yksinkertaiset laskurit, jotta jokainen uusi tieto saa oman id:n.
 let userId = 1;
 let gameId = 1;
-let guessId = 1;
 
 // Palauttaa kaikki käyttäjät.
 router.get('/users', async (req, res) => {
