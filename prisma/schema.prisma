@@ -1,10 +1,24 @@
+<<<<<<< HEAD
 generator client {
   provider = "prisma-client-js"
+=======
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+>>>>>>> 2af8e6b2f8c3450ee34b75704546c74d1c4e6724
 }
 
 datasource db {
   provider = "sqlite"
+<<<<<<< HEAD
   url      = env("DATABASE_URL")
+=======
+>>>>>>> 2af8e6b2f8c3450ee34b75704546c74d1c4e6724
 }
 
 model User {
@@ -39,4 +53,8 @@ model Guess {
 
   userId    Int?
   user      User?    @relation(fields: [userId], references: [id])
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 2af8e6b2f8c3450ee34b75704546c74d1c4e6724
