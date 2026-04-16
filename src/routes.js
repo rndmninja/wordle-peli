@@ -7,8 +7,7 @@ const { status } = require('express/lib/response');
 
 // Muistiin tallennetut taulukot kolmelle perusresurssille.
 // Nämä ovat väliaikaisia ja korvataan myöhemmin oikealla tietokannalla.
-const users = [];
-const games = [];
+
 const guesses = [];
 
 const WORD_LENGTH = 5;
