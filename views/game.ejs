@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Wordle Peli</title>
+	<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+	<main class="game-shell">
+		<header class="game-header">
+			<h1>Wordle Peli</h1>
+			<div class="game-actions">
+				<button id="new-word-button" class="secondary-button" type="button">Arvo uusi sana</button>
+			</div>
+		</header>
+
+		<section class="status-card" aria-live="polite">
+			<p id="status-message" class="message"><%= gameState.message %></p>
+		</section>
+		<form class="guess-form" action="/game/guess" method="post">
+			<label for="guess">Uusi arvaus</label>
+			<div class="guess-controls">
+				<input
+					id="guess"
+					name="guess"
+					type="text"
+					maxlength="<%= wordLength %>"
+					pattern="[a-zA-ZåäöÅÄÖ]{<%= wordLength %>}"
+					autocomplete="off"
+					autocapitalize="none"
+					required
+				>
+				<button type="submit">Arvaa</button>
+			</div>
+		</form>
+		<section id="board" class="board" aria-label="Arvausruudukko">
+			<% boardRows.forEach(function(row) { %>
+				<div class="board-row">
+					<% row.forEach(function(tile) { %>
+						<span class="tile tile--<%= tile.status %>"><%= tile.letter %></span>
+					<% }); %>
+				</div>
+			<% }); %>
+		</section>
+
+	</main>
+
+	<script>
+		const boardElement = document.getElementById('board');
+		const messageElement = document.getElementById('status-message');
+		const guessInput = document.getElementById('guess');
+		const newWordButton = document.getElementById('new-word-button');
+
+		function renderBoard(boardRows) {
+			boardElement.innerHTML = '';
+
+			boardRows.forEach(row => {
+				const rowElement = document.createElement('div');
+				rowElement.className = 'board-row';
+
+				row.forEach(tile => {
+					const tileElement = document.createElement('span');
+					tileElement.className = `tile tile--${tile.status}`;
+					tileElement.textContent = tile.letter;
+					rowElement.appendChild(tileElement);
+				});
+
+				boardElement.appendChild(rowElement);
+			});
+		}
+
+		newWordButton.addEventListener('click', async () => {
+			newWordButton.disabled = true;
+
+			try {
+				const response = await fetch('/game/new-word', {
+					method: 'POST',
+					headers: {
+						'Accept': 'application/json'
+					}
+				});
+				const contentType = response.headers.get('content-type') || '';
+				const responseText = await response.text();
+				const isJsonResponse = contentType.includes('application/json');
+				const payload = isJsonResponse ? JSON.parse(responseText) : null;
+
+				if (!response.ok) {
+					if (payload && payload.message) {
+						throw new Error(payload.message);
+					}
+
+					throw new Error('Uuden sanan haku epaonnistui. Tarkista, etta palvelin on kaynnistetty uudella koodilla.');
+				}
+
+				if (!payload || !Array.isArray(payload.boardRows)) {
+					throw new Error('Palvelin palautti odottamattoman vastauksen. Kaynnista palvelin uudelleen.');
+				}
+
+				renderBoard(payload.boardRows);
+				messageElement.textContent = payload.message;
+				guessInput.value = '';
+				guessInput.focus();
+			} catch (error) {
+				messageElement.textContent = error.message;
+			} finally {
+				newWordButton.disabled = false;
+			}
+		});
+	</script>
+</body>
+</html>

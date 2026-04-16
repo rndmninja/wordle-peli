@@ -1,0 +1,31 @@
+{
+  "name": "wordle-peli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rndmninja/wordle-peli.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rndmninja/wordle-peli/issues"
+  },
+  "homepage": "https://github.com/rndmninja/wordle-peli#readme",
+  "dependencies": {
+    "@prisma/client": "6.16.2",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "dotenv": "^17.4.1",
+    "prisma": "6.16.2"
+  }
+}

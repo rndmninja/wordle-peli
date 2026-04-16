@@ -1,0 +1,173 @@
+body {
+	margin: 0;
+	min-height: 100vh;
+	background: #f4f1ea;
+	color: #1f2933;
+	font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.game-shell {
+	max-width: 640px;
+	margin: 0 auto;
+	padding: 40px 20px 56px;
+}
+
+.game-header {
+	margin-bottom: 24px;
+}
+
+.game-header h1 {
+	margin: 0 0 10px;
+	font-size: clamp(2rem, 4vw, 3rem);
+	line-height: 1.1;
+}
+
+.game-actions {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.secondary-button {
+	padding: 10px 14px;
+	border: 1px solid #cfc6b7;
+	border-radius: 10px;
+	background: #fff;
+	color: #1f2933;
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.secondary-button:hover {
+	background: #f3ede3;
+}
+
+.secondary-button:disabled {
+	opacity: 0.7;
+	cursor: default;
+}
+
+.status-card {
+	margin-bottom: 20px;
+	padding: 16px 18px;
+	border: 1px solid #ddd3c3;
+	border-radius: 16px;
+	background: #fffaf2;
+}
+
+.message {
+	margin: 0 0 6px;
+	font-weight: 700;
+}
+
+.board {
+	display: grid;
+	gap: 10px;
+	margin-bottom: 24px;
+}
+
+.board-row {
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	gap: 10px;
+}
+
+.tile {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	aspect-ratio: 1;
+	border: 2px solid #d9d2c5;
+	border-radius: 14px;
+	background: #fff;
+	font-size: clamp(1.4rem, 2vw, 1.8rem);
+	font-weight: 700;
+	text-transform: uppercase;
+	color: #1f2933;
+}
+
+.tile--empty {
+	background: #f9f7f3;
+	color: transparent;
+}
+
+.tile--correct {
+	border-color: #2f7d32;
+	background: #2f7d32;
+	color: #fff;
+}
+
+.tile--present {
+	border-color: #c58b1f;
+	background: #e2a93b;
+	color: #fff;
+}
+
+.tile--absent {
+	border-color: #77808a;
+	background: #77808a;
+	color: #fff;
+}
+
+.guess-form {
+	display: grid;
+	margin-bottom: 10px;
+}
+
+.guess-form label {
+	font-weight: 700;
+	margin-bottom: 2px;
+}
+
+.guess-controls {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.guess-controls input {
+	flex: 1 1 180px;
+	padding: 14px 16px;
+	border: 1px solid #cfc6b7;
+	border-radius: 12px;
+	font: inherit;
+	text-transform: uppercase;
+	background: #fff;
+}
+
+.guess-controls button {
+	padding: 14px 18px;
+	border: 0;
+	border-radius: 12px;
+	background: #1f2933;
+	color: #fff;
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.guess-controls button:hover {
+	background: #111827;
+}
+
+@media (max-width: 520px) {
+	.game-shell {
+		padding: 28px 16px 40px;
+	}
+
+	.game-actions {
+		margin-top: 6px;
+	}
+
+	.board-row {
+		gap: 8px;
+	}
+
+	.tile {
+		border-radius: 12px;
+	}
+
+	.guess-controls button {
+		width: 100%;
+	}
+}
