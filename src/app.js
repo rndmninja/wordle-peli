@@ -5,6 +5,7 @@ const app = express();
 // Asettaa EJS-templatenginen ja määrittää views-kansion sijainnin.
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));
+
 const routes = require('./routes');
 
 // Antaa Expressille mahdollisuuden lukea JSON-dataa POST-pyyntöjen bodyssa.
@@ -24,6 +25,4 @@ app.get('/', (req, res) => {
 	res.send('App is running!');
 });
 
-app.listen(PORT, () => {
-	console.log(`Server is running! http://localhost:${PORT}/game`);
-});
+module.exports = app;
