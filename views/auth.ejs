@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kirjaudu Wordle-peliin</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <main class="game-shell">
+    <header class="game-header">
+      <h1>Wordle Peli</h1>
+      <p>Kirjaudu sisään tai luo uusi käyttäjä.</p>
+    </header>
+
+    <% if (error) { %>
+      <section class="status-card"><p class="message"><%= error %></p></section>
+    <% } %>
+
+    <section class="status-card" style="margin-bottom: 16px;">
+      <h2>Kirjaudu</h2>
+      <form action="/login" method="post" class="guess-form">
+        <label for="login-name">Käyttäjänimi</label>
+        <input id="login-name" name="name" type="text" required>
+        <label for="login-password">Salasana</label>
+        <input id="login-password" name="password" type="password" required>
+        <div class="guess-controls">
+          <button type="submit">Kirjaudu</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="status-card">
+      <h2>Rekisteroidy</h2>
+      <form action="/register" method="post" class="guess-form">
+        <label for="register-name">Käyttäjänimi</label>
+        <input id="register-name" name="name" type="text" required>
+        <label for="register-password">Salasana</label>
+        <input id="register-password" name="password" type="password" required>
+        <label for="register-role">Rooli</label>
+        <select id="register-role" name="role">
+          <option value="player">player</option>
+          <option value="admin">admin</option>
+        </select>
+        <div class="guess-controls">
+          <button type="submit">Luo käyttäjä</button>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
