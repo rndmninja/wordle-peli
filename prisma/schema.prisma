@@ -8,12 +8,14 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  name         String
+  passwordHash String
+  role         String   @default("player")
+  createdAt    DateTime @default(now())
 
-  games     Game[]
-  guesses   Guess[]
+  games        Game[]
+  guesses      Guess[]
 }
 
 model Game {
