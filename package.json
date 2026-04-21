@@ -1,11 +1,11 @@
 {
   "name": "wordle-peli",
   "version": "1.0.0",
-  "description": "",
+  "description": "Wordle game with Prisma, authentication and authorization",
   "main": "index.js",
   "scripts": {
-    "start": "node src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "test": "jest --runInBand"
   },
   "repository": {
     "type": "git",
@@ -21,11 +21,15 @@
   "homepage": "https://github.com/rndmninja/wordle-peli#readme",
   "dependencies": {
     "@prisma/client": "6.16.2",
+    "bcryptjs": "^3.0.2",
     "ejs": "^5.0.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "express-session": "^1.18.2"
   },
   "devDependencies": {
     "dotenv": "^17.4.1",
-    "prisma": "6.16.2"
+    "jest": "^30.3.0",
+    "prisma": "6.16.2",
+    "supertest": "^7.2.2"
   }
 }
