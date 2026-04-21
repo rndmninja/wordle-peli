@@ -57,4 +57,13 @@ app.use((err, req, res, next) => {
   res.status(500).send('Server error');
 });
 
-module.exports = app;
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send('Server error');
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});

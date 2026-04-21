@@ -4,7 +4,7 @@
   "description": "Wordle game with Prisma, authentication and authorization",
   "main": "index.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node src/app.js",
     "test": "jest --runInBand"
   },
   "repository": {
