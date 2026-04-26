@@ -5,6 +5,11 @@ const bcrypt = require('bcryptjs');
 const router = express.Router();
 const prisma = require('./prisma');
 
+// Muistiin tallennetut taulukot kolmelle perusresurssille.
+// Nämä ovat väliaikaisia ja korvataan myöhemmin oikealla tietokannalla.
+
+
+
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
 const wordsPath = path.join(__dirname, 'words.txt');
@@ -112,100 +117,18 @@ function renderGame(req, res, statusCode = 200) {
   });
 }
 
-function wantsJson(req) {
-  return req.headers.accept?.includes('application/json');
+function chooseRandomWord() {
+	if (words.length === 0) {
+		return null;
+	}
+
+	const randomIndex = Math.floor(Math.random() * words.length);
+	return words[randomIndex];
 }
 
-function requireAuth(req, res, next) {
-  if (req.currentUser) {
-    return next();
-  }
-
-  if (wantsJson(req)) {
-    return res.status(401).json({ error: 'Authentication required' });
-  }
-
-  return res.redirect('/login');
-}
-
-function requireAdmin(req, res, next) {
-  if (req.currentUser?.role === 'admin') {
-    return next();
-  }
-
-  return res.status(403).json({ error: 'Forbidden: admin only' });
-}
-
-function canAccessUser(requestedUserId, currentUser) {
-  return currentUser?.role === 'admin' || currentUser?.id === requestedUserId;
-}
-
-router.get('/', (req, res) => {
-  if (req.currentUser) {
-    return res.redirect('/game');
-  }
-  return res.redirect('/login');
-});
-
-router.get('/login', (req, res) => {
-  if (req.currentUser) {
-    return res.redirect('/game');
-  }
-  return res.render('auth', { error: null });
-});
-
-router.post('/register', async (req, res) => {
-  const name = (req.body.name || '').trim();
-  const password = req.body.password || '';
-
-  if (!name || !password) {
-    return res.status(400).render('auth', { error: 'Anna käyttäjänimi ja salasana.' });
-  }
-
-  const existingUser = await prisma.user.findFirst({ where: { name } });
-  if (existingUser) {
-    return res.status(400).render('auth', { error: 'Käyttäjänimi on jo olemassa.' });
-  }
-
-  const passwordHash = await bcrypt.hash(password, 10);
-  const role = req.body.role === 'admin' ? 'admin' : 'player';
-
-  const user = await prisma.user.create({
-    data: { name, passwordHash, role }
-  });
-
-  req.session.userId = user.id;
-  return res.redirect('/game');
-});
-
-router.post('/login', async (req, res) => {
-  const name = (req.body.name || '').trim();
-  const password = req.body.password || '';
-
-  const user = await prisma.user.findFirst({ where: { name } });
-  if (!user) {
-    return res.status(401).render('auth', { error: 'Väärä käyttäjänimi tai salasana.' });
-  }
-
-  const passwordOk = await bcrypt.compare(password, user.passwordHash);
-  if (!passwordOk) {
-    return res.status(401).render('auth', { error: 'Väärä käyttäjänimi tai salasana.' });
-  }
-
-  req.session.userId = user.id;
-  return res.redirect('/game');
-});
-
-router.post('/logout', (req, res) => {
-  req.session.destroy(() => {
-    res.redirect('/login');
-  });
-});
-
-router.get('/users', requireAuth, requireAdmin, async (req, res) => {
-  const users = await prisma.user.findMany({
-    select: { id: true, name: true, role: true, createdAt: true }
-  });
+// Palauttaa kaikki käyttäjät.
+router.get('/users', async (req, res) => {
+  const users = await prisma.user.findMany();
   res.json(users);
 });
 
@@ -254,32 +177,19 @@ router.get('/guesses', requireAuth, async (req, res) => {
   res.json(guesses);
 });
 
-router.post('/guesses', requireAuth, async (req, res) => {
-  const gameId = Number(req.body.gameId);
-  const word = normalizeGuess(req.body.word);
+// Luo uuden arvauksen ja tallentaa sen muistiin.
+router.post('/guesses', async (req, res) => {
+	if (!req.body.word || req.body.gameId == null) {
+		return res.status(400).json({ error: 'word and gameId are required' });
+	}
 
-  if (!gameId || !word) {
-    return res.status(400).json({ error: 'word and gameId are required' });
-  }
+	const guess = await prisma.guess.create({
+		data: {
+			word: req.body.word,
+			gameId: req.body.gameId
+		}});
 
-  const game = await prisma.game.findUnique({ where: { id: gameId } });
-  if (!game) {
-    return res.status(404).json({ error: 'Game not found' });
-  }
-
-  if (!canAccessUser(game.userId, req.currentUser)) {
-    return res.status(403).json({ error: 'Forbidden: not your game' });
-  }
-
-  const guess = await prisma.guess.create({
-    data: {
-      word,
-      gameId,
-      userId: req.currentUser.id
-    }
-  });
-
-  res.status(201).json(guess);
+	res.status(201).json(guess);
 });
 
 router.get('/game', requireAuth, (req, res) => renderGame(req, res));

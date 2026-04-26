@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
-const session = require('express-session');
-const prisma = require('./prisma');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -10,47 +10,26 @@ app.set('views', path.join(__dirname, '../views'));
 
 const routes = require('./routes');
 
+// Lisää turvallisuusheaderit oletuksena kaikkiin vastauksiin.
+app.use(helmet());
+
+// Antaa Expressille mahdollisuuden lukea JSON-dataa POST-pyyntöjen bodyssa.
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/css', express.static(path.join(__dirname, '../views/css')));
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || 'dev-secret-change-this',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      sameSite: 'lax'
-    }
-  })
-);
-
-app.use(async (req, res, next) => {
-  res.locals.currentUser = null;
-  if (!req.session.userId) {
-    return next();
-  }
-
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: req.session.userId },
-      select: { id: true, name: true, role: true }
-    });
-
-    if (!user) {
-      req.session.userId = null;
-      return next();
-    }
-
-    req.currentUser = user;
-    res.locals.currentUser = user;
-    return next();
-  } catch (error) {
-    return next(error);
-  }
+const guessLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 100,
+	message: { error: 'Too many requests, try again later.' }
 });
 
+// Tarjoaa pelin CSS-tiedoston selaimelle.
+app.use('/css', express.static(path.join(__dirname, '../views/css')));
+
+// Rajoittaa arvausreitin pyyntömäärää bottispämmin estämiseksi.
+app.use('/game/guess', guessLimiter);
+
+// Liitetään erikseen tehdyt resurssireitit tähän sovellukseen.
 app.use(routes);
 
 app.use((err, req, res, next) => {
