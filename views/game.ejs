@@ -11,7 +11,11 @@
 		<header class="game-header">
 			<h1>Wordle Peli</h1>
 			<div class="game-actions">
+				<span style="margin-right: 12px;">Kirjautunut: <strong><%= currentUser.name %></strong> (<%= currentUser.role %>)</span>
 				<button id="new-word-button" class="secondary-button" type="button">Arvo uusi sana</button>
+				<form action="/logout" method="post" style="display:inline; margin-left:8px;">
+					<button type="submit" class="secondary-button">Kirjaudu ulos</button>
+				</form>
 			</div>
 		</header>
 
