@@ -352,25 +352,3 @@ router.post('/game/new-word', requireAuth, (req, res) => {
 });
 
 module.exports = router;
-
-// Admin säädökset 
-function requireAuth(req, res, next) {
-  if (!req.session.user) {
-    return res.redirect('/');
-  }
-  next();
-}
-
-function requireAdmin(req, res, next) {
-  if (!req.session.user || req.session.user.role !== 'admin') {
-    return res.status(403).send('Forbidden');
-  }
-  next();
-}
-
-
-router.get('/users', requireAuth, requireAdmin, async (req, res) => {
-  const users = await prisma.user.findMany();
-
-  res.send(users);
-});
