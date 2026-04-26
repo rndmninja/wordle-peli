@@ -9,6 +9,8 @@ TODO:
 5. Siirrä games-endpointit tietokantaan. (tehty)
 6. Siirrä guesses-endpointit tietokantaan. (tehty)
 7. Lisää ainakin yksi automatisoitu testi tietokanta-endpointille. (tehty)
+8. -
+9. 
 
 
 EXTRA TODO:
