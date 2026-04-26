@@ -8,7 +8,6 @@ describe('POST /users (database test)', () => {
 		await prisma.user.deleteMany({
 			where: { name: 'TestUser123' }
 		});
-		await prisma.$disconnect();
 	});
 
 	it('creates a user in the database', async () => {

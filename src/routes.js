@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const router = express.Router();
 const prisma = require('./prisma');
-const { status } = require('express/lib/response');
 
 // Muistiin tallennetut taulukot kolmelle perusresurssille.
 // Nämä ovat väliaikaisia ja korvataan myöhemmin oikealla tietokannalla.
@@ -127,10 +126,6 @@ function chooseRandomWord() {
 	return words[randomIndex];
 }
 
-// Yksinkertaiset laskurit, jotta jokainen uusi tieto saa oman id:n.
-let userId = 1;
-let gameId = 1;
-
 // Palauttaa kaikki käyttäjät.
 router.get('/users', async (req, res) => {
   const users = await prisma.user.findMany();
@@ -173,14 +168,16 @@ router.get('/guesses', async (req, res) => {
 
 // Luo uuden arvauksen ja tallentaa sen muistiin.
 router.post('/guesses', async (req, res) => {
+	if (!req.body.word || req.body.gameId == null) {
+		return res.status(400).json({ error: 'word and gameId are required' });
+	}
+
 	const guess = await prisma.guess.create({
 		data: {
-			id: guessId++,
-			word: req.body.word || '',
-			gameId: req.body.gameId || null
+			word: req.body.word,
+			gameId: req.body.gameId
 		}});
 
-	guesses.push(guess);
 	res.status(201).json(guess);
 });
 
