@@ -159,12 +159,12 @@ router.post('/register', async (req, res) => {
   const password = req.body.password || '';
 
   if (!name || !password) {
-    return res.status(400).render('auth', { error: 'Anna kayttajanimi ja salasana.' });
+    return res.status(400).render('auth', { error: 'Anna käyttäjänimi ja salasana.' });
   }
 
   const existingUser = await prisma.user.findFirst({ where: { name } });
   if (existingUser) {
-    return res.status(400).render('auth', { error: 'Kayttajanimi on jo olemassa.' });
+    return res.status(400).render('auth', { error: 'Käyttäjänimi on jo olemassa.' });
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
@@ -184,12 +184,12 @@ router.post('/login', async (req, res) => {
 
   const user = await prisma.user.findFirst({ where: { name } });
   if (!user) {
-    return res.status(401).render('auth', { error: 'Vaara kayttajanimi tai salasana.' });
+    return res.status(401).render('auth', { error: 'Väärä käyttäjänimi tai salasana.' });
   }
 
   const passwordOk = await bcrypt.compare(password, user.passwordHash);
   if (!passwordOk) {
-    return res.status(401).render('auth', { error: 'Vaara kayttajanimi tai salasana.' });
+    return res.status(401).render('auth', { error: 'Väärä käyttäjänimi tai salasana.' });
   }
 
   req.session.userId = user.id;
@@ -302,14 +302,14 @@ router.post('/game/guess', requireAuth, (req, res) => {
   }
 
   if (gameState.isOver) {
-    gameState.message = 'Peli on jo paattynyt. Kaynnista uusi sana myohemmin.';
+    gameState.message = 'Peli on jo päättynyt. Käynnistä uusi sana myöhemmin.';
     return renderGame(req, res);
   }
 
   const guessWord = normalizeGuess(req.body.guess);
 
   if (guessWord.length !== WORD_LENGTH) {
-    gameState.message = `Arvauksen pitaa olla ${WORD_LENGTH} kirjainta.`;
+    gameState.message = `Arvauksen pitää olla ${WORD_LENGTH} kirjainta.`;
     return renderGame(req, res, 400);
   }
 
@@ -329,7 +329,7 @@ router.post('/game/guess', requireAuth, (req, res) => {
     gameState.isOver = true;
     gameState.message = `Yritykset loppuivat. Oikea sana oli ${gameState.targetWord.toUpperCase()}.`;
   } else {
-    gameState.message = 'Arvaus lisattiin.';
+    gameState.message = 'Arvaus lisättiin.';
   }
 
   return renderGame(req, res);
